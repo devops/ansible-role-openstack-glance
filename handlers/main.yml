@@ -1,0 +1,9 @@
+---
+# handlers file for ansible-role-openstack-glance
+
+- name: restart openstack-glance
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - "{{ glance_system_service_name }}"

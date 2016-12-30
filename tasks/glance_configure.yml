@@ -1,0 +1,12 @@
+---
+- name: Configure glance API.
+  shell: |
+    openstack-config --set "{{ glance_api_config_location }}" "{{ item.section }}" "{{ item.param }}" "{{ item.value }}"
+  with_items:
+    - "{{ glance_api_config }}"
+
+- name: Configure glance registry.
+  shell: |
+    openstack-config --set "{{ glance_registry_config_location }}" "{{ item.section }}" "{{ item.param }}" "{{ item.value }}"
+  with_items:
+    - "{{ glance_registry_config }}"

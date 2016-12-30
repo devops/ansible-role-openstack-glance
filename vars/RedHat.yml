@@ -1,0 +1,12 @@
+---
+# vars file for Redhat
+
+glance_packages:
+  - openstack-glance
+  - python-glance
+  - python-glanceclient
+glance_system_service_name:
+  - openstack-glance-api
+  - openstack-glance-registry
+glance_api_config_location: /etc/glance/glance-api.conf
+glance_registry_config_location: /etc/glance/glance-registry.conf

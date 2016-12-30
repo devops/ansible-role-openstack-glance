@@ -1,0 +1,10 @@
+---
+# tasks file for openstack-glance post install
+
+- name: Ensure openstack-glance services is started and enabled at boot.
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - "{{ glance_system_service_name }}"

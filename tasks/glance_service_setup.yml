@@ -1,0 +1,32 @@
+---
+# tasks file for openstack-glance service setup
+
+- name: Create the service credentials for glance.
+  shell: |
+    openstack user create --domain default --password "{{ glance_keystone_password }}" "{{ glance_keystone_user }}"
+    openstack role add --project service --user {{ glance_keystone_user }} admin
+  environment:
+    - "{{ token_auth_env }}"
+
+- name: Create the service entity for glance.
+  shell: |
+    openstack service create --name "{{ glance_service_name }}" --description "{{ glance_service_description }}" "{{ glance_service_type }}"
+  environment:
+    - "{{ token_auth_env }}"
+
+# Create the API endpoint for glance.
+- name: Check if API endpoint exists for service "{{ glance_service_type }}"
+  shell: "openstack endpoint list --service {{ glance_service_type }}"
+  register: check_endpoint_result
+  environment:
+    - "{{ token_auth_env }}"
+  ignore_errors: True
+
+- name: "Specify API endpoints for {{ glance_service_type }} service"
+  when: check_endpoint_result.rc == 0
+  shell: |
+    openstack endpoint create --region {{ glance_service_region }} {{ glance_service_type }} public {{ glance_service_public_url }}
+    openstack endpoint create --region {{ glance_service_region }} {{ glance_service_type }} internal {{ glance_service_internal_url }}
+    openstack endpoint create --region {{ glance_service_region }} {{ glance_service_type }} admin {{ glance_service_admin_url }}
+  environment:
+    - "{{ token_auth_env }}"

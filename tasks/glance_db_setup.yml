@@ -1,0 +1,7 @@
+---
+# tasks file for glance DB Setup
+
+- name: DB sync for glance.
+  shell: su -s /bin/sh -c "glance-manage db_sync" glance
+  ignore_errors: True
+  run_once: True

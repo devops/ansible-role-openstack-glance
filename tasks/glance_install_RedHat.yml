@@ -1,0 +1,8 @@
+---
+# tasks file for glance install on RedHat
+
+- name: Install OpenStack glance packages.
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ glance_packages }}"

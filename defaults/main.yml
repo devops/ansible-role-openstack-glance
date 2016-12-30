@@ -1,0 +1,86 @@
+---
+# defaults file for ansible-role-openstack-glance
+
+## openstack public config
+# openstack_db_host: ""
+# openstack_controller_host: ""
+# openstack_keystone_auth_uri: ""
+# openstack_keystone_auth_url: ""
+# openstack_admin_vip: ""
+# openstack_internal_vip: ""
+# openstack_public_vip: ""
+
+# glance service
+glance_service_region: RegionOne
+glance_service_name: glance
+glance_service_type: image
+glance_service_description: "OpenStack Image service"
+glance_service_admin_url: "http://{{ openstack_admin_vip }}:9292"
+glance_service_internal_url: "http://{{ openstack_internal_vip }}:9292"
+glance_service_public_url: "http://{{ openstack_public_vip }}:9292"
+
+# glance db
+glance_db_host: "{{ openstack_db_host }}"
+glance_db_name: "glance"
+glance_db_user: "glance"
+glance_db_password: "glance"
+glance_db_priv: "{{ glance_db_name }}.*:ALL"
+
+# glance keystone
+glance_keystone_user: "glance"
+glance_keystone_password: "glance"
+
+# glance config
+glance_notification_driver: "noop"
+glance_verbose: "True"
+glance_bind_host: "{{ mgmt_ip }}"
+glance_flavor: "keystone"
+# glance_default_store: "file"
+# glance_filesystem_store_datadir: "/var/lib/glance/images/"
+## Ceph rbd Options
+glance_default_store: "rbd"
+glance_stores: "rbd,http"
+glance_rbd_store_pool: "glance"
+glance_rbd_store_user: "glance"
+glance_rbd_store_ceph_conf: "/etc/ceph/ceph.conf"
+glance_rbd_store_chunk_size: 8
+glance_show_image_direct_url: "True"
+
+glance_api_config:
+  - { section: "database", param: "connection", value: "mysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
+  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
+  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
+  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "project_name", value: "service" }
+  - { section: "keystone_authtoken", param: "username", value: "{{ glance_keystone_user }}" }
+  - { section: "keystone_authtoken", param: "password", value: "{{ glance_keystone_password }}" }
+  - { section: "paste_deploy", param: "flavor", value: "{{ glance_flavor }}" }
+  - { section: "DEFAULT", param: "notification_driver", value: "{{ glance_notification_driver }}" }
+  - { section: "DEFAULT", param: "verbose", value: "{{ glance_verbose }}" }
+  - { section: "DEFAULT", param: "bind_host", value: "{{ glance_bind_host }}" }
+  - { section: "DEFAULT", param: "registry_host", value: "{{ openstack_controller_host }}" }
+  - { section: "glance_store", param: "default_store", value: "{{ glance_default_store }}" }
+  - { section: "glance_store", param: "stores", value: "{{ glance_stores }}" }
+  - { section: "glance_store", param: "rbd_store_pool", value: "{{ glance_rbd_store_pool }}" }
+  - { section: "glance_store", param: "rbd_store_user", value: "{{ glance_rbd_store_user }}" }
+  - { section: "glance_store", param: "rbd_store_ceph_conf", value: "{{ glance_rbd_store_ceph_conf }}" }
+  - { section: "glance_store", param: "rbd_store_chunk_size", value: "{{ glance_rbd_store_chunk_size }}" }
+  - { section: "glance_store", param: "show_image_direct_url", value: "{{ glance_show_image_direct_url }}" }
+  # - { section: "glance_store", param: "filesystem_store_datadir", value: "{{ glance_filesystem_store_datadir }}" }
+
+glance_registry_config:
+  - { section: "database", param: "connection", value: "mysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
+  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
+  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
+  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "project_name", value: "service" }
+  - { section: "keystone_authtoken", param: "username", value: "{{ glance_keystone_user }}" }
+  - { section: "keystone_authtoken", param: "password", value: "{{ glance_keystone_password }}" }
+  - { section: "paste_deploy", param: "flavor", value: "{{ glance_flavor }}" }
+  - { section: "DEFAULT", param: "notification_driver", value: "{{ glance_notification_driver }}" }
+  - { section: "DEFAULT", param: "verbose", value: "{{ glance_verbose }}" }
+  - { section: "DEFAULT", param: "bind_host", value: "{{ glance_bind_host }}" }
