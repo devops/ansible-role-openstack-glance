@@ -2,6 +2,9 @@
 # tasks file for glance DB Setup
 
 - name: DB sync for glance.
-  shell: su -s /bin/sh -c "glance-manage db_sync" glance
+  command: >
+    glance-manage db_sync
+  become: yes
+  become_user: "{{ glance_system_user_name }}"
   ignore_errors: True
   run_once: True

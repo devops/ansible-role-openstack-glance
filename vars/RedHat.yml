@@ -3,8 +3,7 @@
 
 glance_packages:
   - openstack-glance
-  - python-glance
-  - python-glanceclient
+
 glance_system_service_name:
   - openstack-glance-api
   - openstack-glance-registry

@@ -10,6 +10,8 @@
 # openstack_internal_vip: ""
 # openstack_public_vip: ""
 
+glance_system_user_name: glance
+
 # glance service
 glance_service_region: RegionOne
 glance_service_name: glance
@@ -45,14 +47,16 @@ glance_rbd_store_user: "glance"
 glance_rbd_store_ceph_conf: "/etc/ceph/ceph.conf"
 glance_rbd_store_chunk_size: 8
 glance_show_image_direct_url: "True"
+glance_memcached_servers: "{{ openstack_memcached_servers }}"
 
 glance_api_config:
-  - { section: "database", param: "connection", value: "mysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
+  - { section: "database", param: "connection", value: "mysql+pymysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
   - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
   - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
-  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
-  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "memcached_servers", value: "{{ glance_memcached_servers }}" }
+  - { section: "keystone_authtoken", param: "auth_type", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_name", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_name", value: "default" }
   - { section: "keystone_authtoken", param: "project_name", value: "service" }
   - { section: "keystone_authtoken", param: "username", value: "{{ glance_keystone_user }}" }
   - { section: "keystone_authtoken", param: "password", value: "{{ glance_keystone_password }}" }
@@ -71,12 +75,13 @@ glance_api_config:
   # - { section: "glance_store", param: "filesystem_store_datadir", value: "{{ glance_filesystem_store_datadir }}" }
 
 glance_registry_config:
-  - { section: "database", param: "connection", value: "mysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
+  - { section: "database", param: "connection", value: "mysql+pymysql://{{ glance_db_user }}:{{ glance_db_password }}@{{ glance_db_host }}/{{ glance_db_name }}" }
   - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
   - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
-  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
-  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "memcached_servers", value: "{{ glance_memcached_servers }}" }
+  - { section: "keystone_authtoken", param: "auth_type", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_name", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_name", value: "default" }
   - { section: "keystone_authtoken", param: "project_name", value: "service" }
   - { section: "keystone_authtoken", param: "username", value: "{{ glance_keystone_user }}" }
   - { section: "keystone_authtoken", param: "password", value: "{{ glance_keystone_password }}" }
